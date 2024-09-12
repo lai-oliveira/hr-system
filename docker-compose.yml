@@ -1,0 +1,55 @@
+version: '3.4'
+
+services:
+
+  eureka-server:
+    image: laicunha/eureka-server:1.0.0
+    ports:
+      - "8761:8761"
+    expose:
+      - "8761"
+    networks:
+      - hr-system
+
+  api-gateway:
+    image: laicunha/api-gateway:1.0.0
+    ports:
+      - "8003:8003"
+    expose:
+      - "8003"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka
+    networks:
+      - hr-system
+
+  user-api:
+    image: laicunha/user-api:1.0.0
+    ports:
+      - "8000:8000"
+    depends_on:
+      - eureka-server
+      - api-gateway
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka
+    networks:
+      - hr-system
+
+  payroll-api:
+    image: laicunha/payroll-api:1.0.0
+    ports:
+      - "8002:8002"
+    depends_on:
+      - eureka-server
+      - api-gateway
+      - user-api
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka
+    networks:
+      - hr-system
+
+
+networks:
+  hr-system:
+    driver: bridge

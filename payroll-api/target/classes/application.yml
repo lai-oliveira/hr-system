@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: payroll-api
+server:
+  port: ${PORT_PAYROLL_API:8002}
+eureka:
+  client:
+    service-url:
+      defalt-zone: ${EUREKA_URL:http://localhost:8761/eureka}
+
